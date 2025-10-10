@@ -80,9 +80,7 @@ const SendingTab: Component = () => {
     return (
         <div class="flex flex-grow gap-4">
             <div class="flex flex-grow flex-col gap-4" style = {{"flex":"3"}}>
-                <button  class="text-dark bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
-                        font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 
-                        dark:border-gray-700 dark:text-white"
+                <button  class="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-colors duration-200"
                     onClick={async () => {
                         const store = new Store("persistent.dat");
                         const recentPaths = (await store.get("recentSaves") || []) as string[];
@@ -91,44 +89,55 @@ const SendingTab: Component = () => {
                             callBack: addFileDirectory
                         });
                     }}>
-                    Add Path&#40;s&#41;
+                    Add Path(s)
                 </button>
-                <button  class="text-dark bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
+                <button  class="text-black bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
                         font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 
                         dark:border-gray-700 dark:text-white" onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addRfd() }}>
                     Add SerialPort
                 </button>
-                <button  class="text-dark bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
+                <button  class="text-black bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
                         font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 
-                        dark:border-gray-700 dark:text-white"  onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addAltusMetrum() }}>
+                        dark:border-gray-700 dark:text-white" onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addAltusMetrum() }}>
                     Add AltusMetrum Product
                 </button>
-                <button  class="text-dark bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
+                <button  class="text-black bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
                         font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 
-                        dark:border-gray-700 dark:text-white"  onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addAim() }}>
+                        dark:border-gray-700 dark:text-white" onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addAim() }}>
                     Add AimXtra
                 </button>
-                <button  class="text-dark bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
+                <button  class="text-black bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
                         font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 
                         dark:border-gray-700 dark:text-white"  onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addFeatherWeight() }}>
                     Add FeatherWeight
                 </button>
                 <For each={comDeviceList()}>
                     {(device, device_index) =>
-                        <label for="DeviceInput" class="px-2 m-0">
-                            <span>{device.device_type} {device.id} </span>
-                            <input name="Device" id="DeviceInput" class="w-1/2, border-b-2 border-white" autocomplete="off"
-                                list="dataDevices" value={comDeviceSelections[device_index()].selection ?? ""}
+                        <div class="flex items-center gap-3 p-3 bg-gray-800 dark:bg-gray-700 rounded-lg border border-gray-600 dark:border-gray-500">
+                            <span class="text-white font-medium min-w-0 flex-shrink-0">{device.device_type} {device.id}</span>
+                            <input 
+                                name="Device" 
+                                id="DeviceInput" 
+                                class="flex-1 px-3 py-2 bg-gray-900 dark:bg-gray-800 border border-gray-500 dark:border-gray-400 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" 
+                                autocomplete="off"
+                                list="dataDevices" 
+                                value={comDeviceSelections[device_index()].selection ?? ""}
+                                placeholder="Enter device path..."
                                 onChange={event => {
                                     console.log((event.target as HTMLInputElement).value!);
-                                    applyNewSelectedPort((event.target as HTMLInputElement).value!, baud(), device.id)}} />
-                            <button onClick={() => {
-                                deleteDevice(device.id);
-                                setComDeviceSelections(comDeviceSelections.filter((_, index) => device_index() != index));
-                            }}>
-                                X
+                                    applyNewSelectedPort((event.target as HTMLInputElement).value!, baud(), device.id)
+                                }} 
+                            />
+                            <button 
+                                class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                                onClick={() => {
+                                    deleteDevice(device.id);
+                                    setComDeviceSelections(comDeviceSelections.filter((_, index) => device_index() != index));
+                                }}
+                            >
+                                ✕
                             </button>
-                        </label>
+                        </div>
                     }
                 </For>
 
@@ -194,13 +203,13 @@ const SendingTab: Component = () => {
                 <p><b>Sent: </b>{sendingLoopState()?.packetsSent} packets</p>
                 <p><b>Received: </b>{parsedPacketCount()} packets</p>
                 <button
-                    class="py-2 px-4 rounded border-0 text-black"
+                    class="py-3 px-6 rounded-lg border-0 text-white font-medium text-lg shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900"
                     classList={{
-                        "bg-red-500": !gotData(),
-                        "bg-green-500": gotData(),
+                        "bg-red-600 hover:bg-red-700 focus:ring-red-500": !gotData(),
+                        "bg-green-600 hover:bg-green-700 focus:ring-green-500": gotData(),
                     }}
                 >
-                    data_indicator
+                    {gotData() ? "✓ Data Received" : "⚠ No Data"}
                 </button>
                 <br />
                 <datalist id="commonBauds">
