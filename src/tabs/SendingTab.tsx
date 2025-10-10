@@ -80,7 +80,9 @@ const SendingTab: Component = () => {
     return (
         <div class="flex flex-grow gap-4">
             <div class="flex flex-grow flex-col gap-4" style = {{"flex":"3"}}>
-                <button class ="border border-black bg-gray dark:bg-gray-800 rounded-md"
+                <button  class="text-dark bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
+                        font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 
+                        dark:border-gray-700 dark:text-white"
                     onClick={async () => {
                         const store = new Store("persistent.dat");
                         const recentPaths = (await store.get("recentSaves") || []) as string[];
@@ -89,19 +91,27 @@ const SendingTab: Component = () => {
                             callBack: addFileDirectory
                         });
                     }}>
-                    addPath&#40;s&#41;
+                    Add Path&#40;s&#41;
                 </button>
-                <button class ="border border-black bg-gray dark:bg-gray-800 rounded-md" onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addRfd() }}>
-                    add SerialPort
+                <button  class="text-dark bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
+                        font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 
+                        dark:border-gray-700 dark:text-white" onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addRfd() }}>
+                    Add SerialPort
                 </button>
-                <button class ="border border-black bg-gray dark:bg-gray-800 rounded-md"  onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addAltusMetrum() }}>
-                    add AltusMetrum Product
+                <button  class="text-dark bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
+                        font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 
+                        dark:border-gray-700 dark:text-white"  onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addAltusMetrum() }}>
+                    Add AltusMetrum Product
                 </button>
-                <button class ="border border-black bg-gray dark:bg-gray-800 rounded-md"  onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addAim() }}>
-                    add AimXtra
+                <button  class="text-dark bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
+                        font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 
+                        dark:border-gray-700 dark:text-white"  onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addAim() }}>
+                    Add AimXtra
                 </button>
-                <button class ="border border-black bg-gray dark:bg-gray-800 rounded-md"  onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addFeatherWeight() }}>
-                    add FeatherWeight
+                <button  class="text-dark bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
+                        font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 
+                        dark:border-gray-700 dark:text-white"  onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addFeatherWeight() }}>
+                    Add FeatherWeight
                 </button>
                 <For each={comDeviceList()}>
                     {(device, device_index) =>
