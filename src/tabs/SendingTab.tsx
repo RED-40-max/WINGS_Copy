@@ -1,4 +1,4 @@
-import { Component, batch, createSignal, JSX, For, Show } from "solid-js";
+import { Component, batch, createSignal, JSX, For, Show, createMemo } from "solid-js";
 import { useBackend } from "../backend_interop/BackendProvider";
 import { addAim, addAltusMetrum, addFeatherWeight, addFileManager, addRfd, deleteDevice, initDevicePort, startSendingLoop, stopSendingLoop } from "../backend_interop/api_calls";
 import ErrorModal from "../modals/ErrorModal";
@@ -19,6 +19,7 @@ const [sendInterval, setSendInterval] = createSignal(500);
 const [baud, setBaud] = createSignal(115200);
 const [isSimulating, setSimulating] = createSignal(false);
 const [mode, selectMode] = createSignal(SendingModes.FromCSV);
+const [sortOrder, setSortOrder] = createSignal<'asc' | 'desc'>('asc');
 
 export const IterateComDevicesIterator = () => {
     return comDevicesIterator++;
@@ -27,6 +28,26 @@ export const IterateComDevicesIterator = () => {
 const SendingTab: Component = () => {
     const { availableDeviceNames: availablePortNames, parsedPacketCount, sendingLoopState, comDeviceList, gotData } = useBackend();
     const { showModal } = useModal();
+
+    const serialPortDevices = createMemo(() => 
+        comDeviceList().filter(device => device.device_type === 'SerialPort')
+            .sort((a, b) => sortOrder() === 'asc' ? a.id - b.id : b.id - a.id)
+    );
+    
+    const aimXtraDevices = createMemo(() => 
+        comDeviceList().filter(device => device.device_type === 'AimXtra')
+            .sort((a, b) => sortOrder() === 'asc' ? a.id - b.id : b.id - a.id)
+    );
+
+    const altusMetrumDevices = createMemo(() => 
+        comDeviceList().filter(device => device.device_type === 'TeleDongle')
+            .sort((a, b) => sortOrder() === 'asc' ? a.id - b.id : b.id - a.id)
+    );
+
+    const featherWeightDevices = createMemo(() => 
+        comDeviceList().filter(device => device.device_type === 'FeatherWeight')
+            .sort((a, b) => sortOrder() === 'asc' ? a.id - b.id : b.id - a.id)
+    );
 
     const startSimulating = async () => {
         debugger;
@@ -80,7 +101,10 @@ const SendingTab: Component = () => {
     return (
         <div class="flex flex-grow gap-4">
             <div class="flex flex-grow flex-col gap-4" style = {{"flex":"3"}}>
-                <button  class="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-colors duration-200"
+
+                <button class="text-black bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
+                        font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 
+                        dark:border-gray-700 dark:text-white" 
                     onClick={async () => {
                         const store = new Store("persistent.dat");
                         const recentPaths = (await store.get("recentSaves") || []) as string[];
@@ -89,58 +113,49 @@ const SendingTab: Component = () => {
                             callBack: addFileDirectory
                         });
                     }}>
-                    Add Path(s)
+                    Add Path&#40;s&#41;
                 </button>
-                <button  class="text-black bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
+                <button class="text-black bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
                         font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 
                         dark:border-gray-700 dark:text-white" onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addRfd() }}>
                     Add SerialPort
                 </button>
-                <button  class="text-black bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
+                <button class="text-black bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
                         font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 
                         dark:border-gray-700 dark:text-white" onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addAltusMetrum() }}>
                     Add AltusMetrum Product
                 </button>
-                <button  class="text-black bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
+                <button class="text-black bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
                         font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 
                         dark:border-gray-700 dark:text-white" onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addAim() }}>
                     Add AimXtra
                 </button>
-                <button  class="text-black bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
+                <button class="text-black bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
                         font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 
-                        dark:border-gray-700 dark:text-white"  onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addFeatherWeight() }}>
+                        dark:border-gray-700 dark:text-white" onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addFeatherWeight() }}>
                     Add FeatherWeight
                 </button>
                 <For each={comDeviceList()}>
                     {(device, device_index) =>
-                        <div class="flex items-center gap-3 p-3 bg-gray-800 dark:bg-gray-700 rounded-lg border border-gray-600 dark:border-gray-500">
-                            <span class="text-white font-medium min-w-0 flex-shrink-0">{device.device_type} {device.id}</span>
-                            <input 
-                                name="Device" 
-                                id="DeviceInput" 
-                                class="flex-1 px-3 py-2 bg-gray-900 dark:bg-gray-800 border border-gray-500 dark:border-gray-400 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" 
-                                autocomplete="off"
-                                list="dataDevices" 
-                                value={comDeviceSelections[device_index()].selection ?? ""}
-                                placeholder="Enter device path..."
+                        <label for="DeviceInput" class="px-2 m-0">
+                            <span>{device.device_type} {device.id} </span>
+                            <input name="Device" id="DeviceInput" class="w-1/2 border-b-2 border-white" autocomplete="off"
+                                list="dataDevices" value={comDeviceSelections[device_index()].selection ?? ""}
                                 onChange={event => {
                                     console.log((event.target as HTMLInputElement).value!);
-                                    applyNewSelectedPort((event.target as HTMLInputElement).value!, baud(), device.id)
-                                }} 
-                            />
+                                    applyNewSelectedPort((event.target as HTMLInputElement).value!, baud(), device.id)}} />
                             <button 
-                                class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                                class="px-1 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded cursor-pointer"
                                 onClick={() => {
                                     deleteDevice(device.id);
                                     setComDeviceSelections(comDeviceSelections.filter((_, index) => device_index() != index));
-                                }}
-                            >
-                                ✕
+                                }}>
+                                X
                             </button>
-                        </div>
+                        </label>
                     }
-                </For>
-
+                </For>              
+                                                                                      
                 <datalist id="dataDevices">
                     <For each={availablePortNames()}>
                         {(Device) => <option value={Device.name}/>}
@@ -199,17 +214,17 @@ const SendingTab: Component = () => {
                     {isSimulating() ? "Stop Sending" : "Start Sending"}
                 </button>
             </div> */}
-            <div class="flex flex-2 flex-grow flex-col gap-4" style = {{"flex":"2"}}>
+            <div class="flex flex-2 flex-grow flex-col gap-4" style = {{"flex": "2"}}>
                 <p><b>Sent: </b>{sendingLoopState()?.packetsSent} packets</p>
                 <p><b>Received: </b>{parsedPacketCount()} packets</p>
                 <button
-                    class="py-3 px-6 rounded-lg border-0 text-white font-medium text-lg shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900"
+                    class="py-2 px-4 rounded-lg border-0 text-white font-medium text-lg shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900"
                     classList={{
-                        "bg-red-600 hover:bg-red-700 focus:ring-red-500": !gotData(),
+                        "bg-red-500 hover:bg-red-700 focus:ring-red-500": !gotData(),
                         "bg-green-600 hover:bg-green-700 focus:ring-green-500": gotData(),
                     }}
                 >
-                    {gotData() ? "✓ Data Received" : "⚠ No Data"}
+                    data_indicator
                 </button>
                 <br />
                 <datalist id="commonBauds">
