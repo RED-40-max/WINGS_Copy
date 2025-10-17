@@ -104,7 +104,7 @@ const SendingTab: Component = () => {
 
                 <button class="text-black bg-gray-200 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300
                         font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 
-                        dark:border-gray-700 dark:text-white" 
+                        dark:border-gray-700 dark:text-white"
                     onClick={async () => {
                         const store = new Store("persistent.dat");
                         const recentPaths = (await store.get("recentSaves") || []) as string[];
@@ -135,27 +135,177 @@ const SendingTab: Component = () => {
                         dark:border-gray-700 dark:text-white" onClick={() => { setComDeviceSelections([...comDeviceSelections, { id: comDevicesIterator++, selection: "" }]); addFeatherWeight() }}>
                     Add FeatherWeight
                 </button>
-                <For each={comDeviceList()}>
-                    {(device, device_index) =>
-                        <label for="DeviceInput" class="px-2 m-0">
-                            <span>{device.device_type} {device.id} </span>
-                            <input name="Device" id="DeviceInput" class="w-1/2 border-b-2 border-white" autocomplete="off"
-                                list="dataDevices" value={comDeviceSelections[device_index()].selection ?? ""}
-                                onChange={event => {
-                                    console.log((event.target as HTMLInputElement).value!);
-                                    applyNewSelectedPort((event.target as HTMLInputElement).value!, baud(), device.id)}} />
+                <div class="flex gap-3 overflow-x-auto pb-2" style="min-height: 200px;">
+                    <div class="flex flex-col w-64 flex-shrink-0">
+                        <div class="flex items-center justify-between mb-1">
+                            <h4 class="text-white text-sm font-medium">SerialPort</h4>
                             <button 
-                                class="px-1 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded cursor-pointer"
-                                onClick={() => {
-                                    deleteDevice(device.id);
-                                    setComDeviceSelections(comDeviceSelections.filter((_, index) => device_index() != index));
-                                }}>
-                                X
+                                class="px-1 py-0.5 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded"
+                                onClick={() => setSortOrder(sortOrder() === 'asc' ? 'desc' : 'asc')}
+                            >
+                                {sortOrder() === 'asc' ? '↑' : '↓'}
                             </button>
-                        </label>
-                    }
-                </For>              
-                                                                                      
+                        </div>
+                        <div class="flex-1 overflow-y-auto space-y-1 max-h-48">
+                            <For each={serialPortDevices()}>
+                                {(device) => {
+                                    const globalIndex = comDeviceList().findIndex(d => d.id === device.id);
+                                    return (
+                                        <div class="flex items-center gap-1 p-2 bg-gray-800 dark:bg-gray-700 rounded border border-gray-600">
+                                            <span class="text-white text-xs">{device.id}</span>
+                                            <input 
+                                                class="flex-1 px-2 py-1 bg-gray-900 dark:bg-gray-800 border border-gray-500 rounded text-white text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500" 
+                                                autocomplete="off"
+                                                list="dataDevices" 
+                                                value={comDeviceSelections[globalIndex]?.selection ?? ""}
+                                                placeholder="path..."
+                                                onChange={event => {
+                                                    applyNewSelectedPort((event.target as HTMLInputElement).value!, baud(), device.id)
+                                                }} 
+                                            />
+                                            <button 
+                                                class="px-1 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded"
+                                                onClick={() => {
+                                                    deleteDevice(device.id);
+                                                    setComDeviceSelections(comDeviceSelections.filter((_, index) => globalIndex != index));
+                                                }}
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    );
+                                }}
+                            </For>
+                        </div>
+                    </div>
+                    <div class="flex flex-col w-64 flex-shrink-0">
+                        <div class="flex items-center justify-between mb-1">
+                            <h4 class="text-white text-sm font-medium">AimXtra</h4>
+                            <button 
+                                class="px-1 py-0.5 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded"
+                                onClick={() => setSortOrder(sortOrder() === 'asc' ? 'desc' : 'asc')}
+                            >
+                                {sortOrder() === 'asc' ? '↑' : '↓'}
+                            </button>
+                        </div>
+                        <div class="flex-1 overflow-y-auto space-y-1 max-h-48">
+                            <For each={aimXtraDevices()}>
+                                {(device) => {
+                                    const globalIndex = comDeviceList().findIndex(d => d.id === device.id);
+                                    return (
+                                        <div class="flex items-center gap-1 p-2 bg-gray-800 dark:bg-gray-700 rounded border border-gray-600">
+                                            <span class="text-white text-xs">{device.id}</span>
+                                            <input 
+                                                class="flex-1 px-2 py-1 bg-gray-900 dark:bg-gray-800 border border-gray-500 rounded text-white text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500" 
+                                                autocomplete="off"
+                                                list="dataDevices" 
+                                                value={comDeviceSelections[globalIndex]?.selection ?? ""}
+                                                placeholder="path..."
+                                                onChange={event => {
+                                                    applyNewSelectedPort((event.target as HTMLInputElement).value!, baud(), device.id)
+                                                }} 
+                                            />
+                                            <button 
+                                                class="px-1 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded"
+                                                onClick={() => {
+                                                    deleteDevice(device.id);
+                                                    setComDeviceSelections(comDeviceSelections.filter((_, index) => globalIndex != index));
+                                                }}
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    );
+                                }}
+                            </For>
+                        </div>
+                    </div>
+                    <div class="flex flex-col w-64 flex-shrink-0">
+                        <div class="flex items-center justify-between mb-1">
+                            <h4 class="text-white text-sm font-medium">TeleDongle</h4>
+                            <button 
+                                class="px-1 py-0.5 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded"
+                                onClick={() => setSortOrder(sortOrder() === 'asc' ? 'desc' : 'asc')}
+                            >
+                                {sortOrder() === 'asc' ? '↑' : '↓'}
+                            </button>
+                        </div>
+                        <div class="flex-1 overflow-y-auto space-y-1 max-h-48">
+                            <For each={altusMetrumDevices()}>
+                                {(device) => {
+                                    const globalIndex = comDeviceList().findIndex(d => d.id === device.id);
+                                    return (
+                                        <div class="flex items-center gap-1 p-2 bg-gray-800 dark:bg-gray-700 rounded border border-gray-600">
+                                            <span class="text-white text-xs">{device.id}</span>
+                                            <input 
+                                                class="flex-1 px-2 py-1 bg-gray-900 dark:bg-gray-800 border border-gray-500 rounded text-white text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500" 
+                                                autocomplete="off"
+                                                list="dataDevices" 
+                                                value={comDeviceSelections[globalIndex]?.selection ?? ""}
+                                                placeholder="path..."
+                                onChange={event => {
+                                                    applyNewSelectedPort((event.target as HTMLInputElement).value!, baud(), device.id)
+                                                }} 
+                                            />
+                                            <button 
+                                                class="px-1 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded"
+                                                onClick={() => {
+                                deleteDevice(device.id);
+                                                    setComDeviceSelections(comDeviceSelections.filter((_, index) => globalIndex != index));
+                                                }}
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    );
+                                }}
+                            </For>
+                        </div>
+                    </div>
+                    <div class="flex flex-col w-64 flex-shrink-0">
+                        <div class="flex items-center justify-between mb-1">
+                            <h4 class="text-white text-sm font-medium">FeatherWeight</h4>
+                            <button 
+                                class="px-1 py-0.5 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded"
+                                onClick={() => setSortOrder(sortOrder() === 'asc' ? 'desc' : 'asc')}
+                            >
+                                {sortOrder() === 'asc' ? '↑' : '↓'}
+                            </button>
+                        </div>
+                        <div class="flex-1 overflow-y-auto space-y-1 max-h-48">
+                            <For each={featherWeightDevices()}>
+                                {(device) => {
+                                    const globalIndex = comDeviceList().findIndex(d => d.id === device.id);
+                                    return (
+                                        <div class="flex items-center gap-1 p-2 bg-gray-800 dark:bg-gray-700 rounded border border-gray-600">
+                                            <span class="text-white text-xs">{device.id}</span>
+                                            <input 
+                                                class="flex-1 px-2 py-1 bg-gray-900 dark:bg-gray-800 border border-gray-500 rounded text-white text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500" 
+                                                autocomplete="off"
+                                                list="dataDevices" 
+                                                value={comDeviceSelections[globalIndex]?.selection ?? ""}
+                                                placeholder="path..."
+                                                onChange={event => {
+                                                    applyNewSelectedPort((event.target as HTMLInputElement).value!, baud(), device.id)
+                                                }} 
+                                            />
+                                            <button 
+                                                class="px-1 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded"
+                                                onClick={() => {
+                                                    deleteDevice(device.id);
+                                                    setComDeviceSelections(comDeviceSelections.filter((_, index) => globalIndex != index));
+                                                }}
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    );
+                                }}
+                </For>
+                        </div>
+                    </div>
+                </div>              
+
                 <datalist id="dataDevices">
                     <For each={availablePortNames()}>
                         {(Device) => <option value={Device.name}/>}
