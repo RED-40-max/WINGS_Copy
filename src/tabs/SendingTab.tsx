@@ -137,12 +137,11 @@ const SendingTab: Component = () => {
                 </button>
                 <div class="flex gap-3 overflow-x-auto pb-2" style="min-height: 200px;">
                     <div class="flex flex-col w-64 flex-shrink-0">
-                        <div class="flex items-center justify-between mb-1">
-                            <h4 class="text-white text-sm font-medium">SerialPort</h4>
+                       <div class="flex items-center gap-1 p-2 bg-gray-100 dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-600">
+                           <h4 class="text-black dark:text-white text-sm font-medium">SerialPort</h4>
                             <button 
-                                class="px-1 py-0.5 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded"
-                                onClick={() => setSortOrder(sortOrder() === 'asc' ? 'desc' : 'asc')}
-                            >
+                                class="px-1 py-0.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 text-black dark:text-white text-xs rounded transition-colors duration-200"
+                                onClick={() => setSortOrder(sortOrder() === 'asc' ? 'desc' : 'asc')}>
                                 {sortOrder() === 'asc' ? '↑' : '↓'}
                             </button>
                         </div>
@@ -151,10 +150,10 @@ const SendingTab: Component = () => {
                                 {(device) => {
                                     const globalIndex = comDeviceList().findIndex(d => d.id === device.id);
                                     return (
-                                        <div class="flex items-center gap-1 p-2 bg-gray-800 dark:bg-gray-700 rounded border border-gray-600">
-                                            <span class="text-white text-xs">{device.id}</span>
+                                        <div class="flex items-center gap-1 p-2 bg-white dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-600">
+                                           <span class="text-black dark:text-white text-xs">{device.id}</span>
                                             <input 
-                                                class="flex-1 px-2 py-1 bg-gray-900 dark:bg-gray-800 border border-gray-500 rounded text-white text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500" 
+                                                class="flex-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded text-black dark:text-white text-xs placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors duration-200" 
                                                 autocomplete="off"
                                                 list="dataDevices" 
                                                 value={comDeviceSelections[globalIndex]?.selection ?? ""}
@@ -164,7 +163,7 @@ const SendingTab: Component = () => {
                                                 }} 
                                             />
                                             <button 
-                                                class="px-1 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded"
+                                               class="px-1 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 text-black dark:text-white text-xs rounded transition-colors duration-200"
                                                 onClick={() => {
                                                     deleteDevice(device.id);
                                                     setComDeviceSelections(comDeviceSelections.filter((_, index) => globalIndex != index));
@@ -179,52 +178,10 @@ const SendingTab: Component = () => {
                         </div>
                     </div>
                     <div class="flex flex-col w-64 flex-shrink-0">
-                        <div class="flex items-center justify-between mb-1">
-                            <h4 class="text-white text-sm font-medium">AimXtra</h4>
+                       <div class="flex items-center gap-1 p-2 bg-gray-100 dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-600">
+                           <h4 class="text-black dark:text-white text-sm font-medium">Altus Metrum</h4>
                             <button 
-                                class="px-1 py-0.5 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded"
-                                onClick={() => setSortOrder(sortOrder() === 'asc' ? 'desc' : 'asc')}
-                            >
-                                {sortOrder() === 'asc' ? '↑' : '↓'}
-                            </button>
-                        </div>
-                        <div class="flex-1 overflow-y-auto space-y-1 max-h-48">
-                            <For each={aimXtraDevices()}>
-                                {(device) => {
-                                    const globalIndex = comDeviceList().findIndex(d => d.id === device.id);
-                                    return (
-                                        <div class="flex items-center gap-1 p-2 bg-gray-800 dark:bg-gray-700 rounded border border-gray-600">
-                                            <span class="text-white text-xs">{device.id}</span>
-                                            <input 
-                                                class="flex-1 px-2 py-1 bg-gray-900 dark:bg-gray-800 border border-gray-500 rounded text-white text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500" 
-                                                autocomplete="off"
-                                                list="dataDevices" 
-                                                value={comDeviceSelections[globalIndex]?.selection ?? ""}
-                                                placeholder="path..."
-                                                onChange={event => {
-                                                    applyNewSelectedPort((event.target as HTMLInputElement).value!, baud(), device.id)
-                                                }} 
-                                            />
-                                            <button 
-                                                class="px-1 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded"
-                                                onClick={() => {
-                                                    deleteDevice(device.id);
-                                                    setComDeviceSelections(comDeviceSelections.filter((_, index) => globalIndex != index));
-                                                }}
-                                            >
-                                                ✕
-                                            </button>
-                                        </div>
-                                    );
-                                }}
-                            </For>
-                        </div>
-                    </div>
-                    <div class="flex flex-col w-64 flex-shrink-0">
-                        <div class="flex items-center justify-between mb-1">
-                            <h4 class="text-white text-sm font-medium">TeleDongle</h4>
-                            <button 
-                                class="px-1 py-0.5 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded"
+                                class="px-1 py-0.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 text-black dark:text-white text-xs rounded transition-colors duration-200"
                                 onClick={() => setSortOrder(sortOrder() === 'asc' ? 'desc' : 'asc')}
                             >
                                 {sortOrder() === 'asc' ? '↑' : '↓'}
@@ -235,10 +192,10 @@ const SendingTab: Component = () => {
                                 {(device) => {
                                     const globalIndex = comDeviceList().findIndex(d => d.id === device.id);
                                     return (
-                                        <div class="flex items-center gap-1 p-2 bg-gray-800 dark:bg-gray-700 rounded border border-gray-600">
-                                            <span class="text-white text-xs">{device.id}</span>
+                                        <div class="flex items-center gap-1 p-2 bg-white dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-600">
+                                           <span class="text-black dark:text-white text-xs">{device.id}</span>
                                             <input 
-                                                class="flex-1 px-2 py-1 bg-gray-900 dark:bg-gray-800 border border-gray-500 rounded text-white text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500" 
+                                                class="flex-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded text-black dark:text-white text-xs placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors duration-200" 
                                                 autocomplete="off"
                                                 list="dataDevices" 
                                                 value={comDeviceSelections[globalIndex]?.selection ?? ""}
@@ -248,7 +205,7 @@ const SendingTab: Component = () => {
                                                 }} 
                                             />
                                             <button 
-                                                class="px-1 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded"
+                                               class="px-1 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 text-black dark:text-white text-xs rounded transition-colors duration-200"
                                                 onClick={() => {
                                 deleteDevice(device.id);
                                                     setComDeviceSelections(comDeviceSelections.filter((_, index) => globalIndex != index));
@@ -263,10 +220,52 @@ const SendingTab: Component = () => {
                         </div>
                     </div>
                     <div class="flex flex-col w-64 flex-shrink-0">
-                        <div class="flex items-center justify-between mb-1">
-                            <h4 class="text-white text-sm font-medium">FeatherWeight</h4>
+                       <div class="flex items-center gap-1 p-2 bg-gray-100 dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-600">
+                           <h4 class="text-black dark:text-white text-sm font-medium">AimXtra</h4>
                             <button 
-                                class="px-1 py-0.5 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded"
+                                class="px-1 py-0.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 text-black dark:text-white text-xs rounded transition-colors duration-200"
+                                onClick={() => setSortOrder(sortOrder() === 'asc' ? 'desc' : 'asc')}
+                            >
+                                {sortOrder() === 'asc' ? '↑' : '↓'}
+                            </button>
+                        </div>
+                        <div class="flex-1 overflow-y-auto space-y-1 max-h-48">
+                            <For each={aimXtraDevices()}>
+                                {(device) => {
+                                    const globalIndex = comDeviceList().findIndex(d => d.id === device.id);
+                                    return (
+                                        <div class="flex items-center gap-1 p-2 bg-white dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-600">
+                                           <span class="text-black dark:text-white text-xs">{device.id}</span>
+                                            <input 
+                                                class="flex-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded text-black dark:text-white text-xs placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors duration-200" 
+                                                autocomplete="off"
+                                                list="dataDevices" 
+                                                value={comDeviceSelections[globalIndex]?.selection ?? ""}
+                                                placeholder="path..."
+                                                onChange={event => {
+                                                    applyNewSelectedPort((event.target as HTMLInputElement).value!, baud(), device.id)
+                                                }} 
+                                            />
+                                            <button 
+                                               class="px-1 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 text-black dark:text-white text-xs rounded transition-colors duration-200"
+                                                onClick={() => {
+                                                    deleteDevice(device.id);
+                                                    setComDeviceSelections(comDeviceSelections.filter((_, index) => globalIndex != index));
+                                                }}
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    );
+                                }}
+                            </For>
+                        </div>
+                    </div>
+                    <div class="flex flex-col w-64 flex-shrink-0">
+                       <div class="flex items-center gap-1 p-2 bg-gray-100 dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-600">
+                           <h4 class="text-black dark:text-white text-sm font-medium">FeatherWeight</h4>
+                            <button 
+                                class="px-1 py-0.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 text-black dark:text-white text-xs rounded transition-colors duration-200"
                                 onClick={() => setSortOrder(sortOrder() === 'asc' ? 'desc' : 'asc')}
                             >
                                 {sortOrder() === 'asc' ? '↑' : '↓'}
@@ -277,10 +276,10 @@ const SendingTab: Component = () => {
                                 {(device) => {
                                     const globalIndex = comDeviceList().findIndex(d => d.id === device.id);
                                     return (
-                                        <div class="flex items-center gap-1 p-2 bg-gray-800 dark:bg-gray-700 rounded border border-gray-600">
-                                            <span class="text-white text-xs">{device.id}</span>
+                                        <div class="flex items-center gap-1 p-2 bg-white dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-600">
+                                           <span class="text-black dark:text-white text-xs">{device.id}</span>
                                             <input 
-                                                class="flex-1 px-2 py-1 bg-gray-900 dark:bg-gray-800 border border-gray-500 rounded text-white text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500" 
+                                                class="flex-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded text-black dark:text-white text-xs placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors duration-200" 
                                                 autocomplete="off"
                                                 list="dataDevices" 
                                                 value={comDeviceSelections[globalIndex]?.selection ?? ""}
@@ -290,7 +289,7 @@ const SendingTab: Component = () => {
                                                 }} 
                                             />
                                             <button 
-                                                class="px-1 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded"
+                                               class="px-1 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 text-black dark:text-white text-xs rounded transition-colors duration-200"
                                                 onClick={() => {
                                                     deleteDevice(device.id);
                                                     setComDeviceSelections(comDeviceSelections.filter((_, index) => globalIndex != index));
